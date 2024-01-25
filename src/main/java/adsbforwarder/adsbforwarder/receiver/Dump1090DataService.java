@@ -122,13 +122,11 @@ public class Dump1090DataService {
     public void sendData(Dump1090Data dump1090Data) {
         String endpointUrl = "http://34.30.213.233:1880/adsb";
 
-        if(queueIsNotEmpty()) {
-            String requestData = convertToJson(dump1090Data);
+        String requestData = convertToJson(dump1090Data);
 
-            logger.info("Sending data: {}", requestData);
+        logger.info("Sending data: {}", requestData);
 
-            restTemplate.put(endpointUrl, requestData);
-        }
+        restTemplate.put(endpointUrl, requestData);
     }
 
     private String convertToJson(Dump1090Data data) {
