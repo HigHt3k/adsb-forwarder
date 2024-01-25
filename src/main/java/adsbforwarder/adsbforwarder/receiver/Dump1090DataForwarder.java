@@ -17,14 +17,4 @@ public class Dump1090DataForwarder {
     public Dump1090DataForwarder(Dump1090DataService dataService) {
         this.dataService = dataService;
     }
-
-    @PostConstruct
-    public void forwardDump1090Data() {
-        while (true) {
-            if (dataService.queueIsNotEmpty()) {
-                Dump1090Data dataObject = dataService.getNextFromQueue();
-                logger.info(dataObject.getHexIdent());
-            }
-        }
-    }
 }
