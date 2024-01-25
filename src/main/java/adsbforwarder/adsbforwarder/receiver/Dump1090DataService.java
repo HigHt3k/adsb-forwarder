@@ -1,19 +1,25 @@
 package adsbforwarder.adsbforwarder.receiver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class Dump1090DataService {
     private final Dump1090DataQueue dataQueue;
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
     private final Logger logger = LoggerFactory.getLogger(Dump1090DataService.class);
 
     @Autowired
-    public Dump1090DataService(Dump1090DataQueue dataQueue) {
+    public Dump1090DataService(Dump1090DataQueue dataQueue, RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.dataQueue = dataQueue;
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
     }
 
     public boolean queueIsNotEmpty() {
@@ -100,6 +106,34 @@ public class Dump1090DataService {
             logger.warn("Received message with different amount of fields [{}]: {}", dataParts.length, rawData);
         } catch(Exception e) {
             logger.error("Unexpected error: ", e);
+        }
+    }
+
+    public void reportSize() {
+        logger.info("Queue size: {}", dataQueue.currentQueueSize());
+    }
+
+    public void sendData() {
+        String endpointUrl = "http://34.30.213.233:1880/adsb";
+
+        if(queueIsNotEmpty()) {
+            Dump1090Data dataObject = getNextFromQueue();
+
+            String requestData = convertToJson(dataObject);
+
+            logger.info("Sending data: {}", requestData);
+
+            restTemplate.postForObject(endpointUrl, requestData, String.class);
+        }
+    }
+
+    private String convertToJson(Dump1090Data data) {
+        try {
+            return objectMapper.writeValueAsString(data);
+        } catch (Exception e) {
+            // Handle or log the exception as needed
+            e.printStackTrace();
+            return null;
         }
     }
 
