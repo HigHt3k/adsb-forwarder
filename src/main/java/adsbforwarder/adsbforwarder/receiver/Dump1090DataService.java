@@ -123,7 +123,7 @@ public class Dump1090DataService {
 
             logger.info("Sending data: {}", requestData);
 
-            restTemplate.postForObject(endpointUrl, requestData, String.class);
+            restTemplate.put(endpointUrl, requestData);
         }
     }
 
