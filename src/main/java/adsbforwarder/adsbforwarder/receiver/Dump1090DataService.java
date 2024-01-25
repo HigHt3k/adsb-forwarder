@@ -99,7 +99,7 @@ public class Dump1090DataService {
 
             dump1090Data.setRawMessage(rawData);
 
-            if(!squawk.equals("7777")) {
+            if(!squawk.equals("7777") && !longitude.isEmpty() && !latitude.isEmpty()) {
                 sendData(dump1090Data);
             } else {
                 skipSending(dump1090Data);
@@ -124,7 +124,7 @@ public class Dump1090DataService {
 
         String requestData = convertToJson(dump1090Data);
 
-        logger.info("Sending data: {}", requestData);
+        logger.info("SENDING DATA: {}", requestData);
 
         restTemplate.put(endpointUrl, requestData);
     }
