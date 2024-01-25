@@ -40,8 +40,6 @@ public class Dump1090DataReceiver {
                 // Parse the line and create a Dump1090Data object
                 logger.info("Received line: {}", line);
                 dataService.parseDump1090Data(line);
-                dataService.sendData();
-                dataService.reportSize();
             }
 
             socket.close();

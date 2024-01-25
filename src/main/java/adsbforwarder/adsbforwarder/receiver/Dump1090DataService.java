@@ -99,7 +99,13 @@ public class Dump1090DataService {
 
             dump1090Data.setRawMessage(rawData);
 
-            dataQueue.addData(dump1090Data);
+            if(!squawk.equals("7777")) {
+                sendData(dump1090Data);
+            } else {
+                skipSending(dump1090Data);
+            }
+
+
         } catch(NumberFormatException e) {
             logger.warn("Not parsing line due to number format exception: {}", rawData);
         } catch(ArrayIndexOutOfBoundsException e) {
@@ -109,17 +115,15 @@ public class Dump1090DataService {
         }
     }
 
-    public void reportSize() {
-        logger.info("Queue size: {}", dataQueue.currentQueueSize());
+    public void skipSending(Dump1090Data dump1090Data) {
+        logger.info("Not sending data for invalid position data: {}", convertToJson(dump1090Data));
     }
 
-    public void sendData() {
+    public void sendData(Dump1090Data dump1090Data) {
         String endpointUrl = "http://34.30.213.233:1880/adsb";
 
         if(queueIsNotEmpty()) {
-            Dump1090Data dataObject = getNextFromQueue();
-
-            String requestData = convertToJson(dataObject);
+            String requestData = convertToJson(dump1090Data);
 
             logger.info("Sending data: {}", requestData);
 
