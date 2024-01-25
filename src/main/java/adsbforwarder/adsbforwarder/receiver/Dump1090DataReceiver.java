@@ -26,6 +26,7 @@ public class Dump1090DataReceiver {
 
     @EventListener(ApplicationReadyEvent.class)
     public void retrieveDump1090Data() {
+        logger.info("Trying to connect to socket.");
         try {
             Socket socket = new Socket("localhost", 30003);
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
