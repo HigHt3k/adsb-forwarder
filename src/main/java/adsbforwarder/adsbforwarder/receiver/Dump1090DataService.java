@@ -64,6 +64,7 @@ public class Dump1090DataService {
             if (!hexIdent.isEmpty())
                 dump1090Data.setIcao24Decimal(Integer.parseInt(hexIdent, 16));
             dump1090Data.setHexIdent(hexIdent);
+            dump1090Data.setName(hexIdent);
             dump1090Data.setFlightNumber(flightNumber);
             dump1090Data.setDateMessageGenerated(dateMessageGenerated);
             dump1090Data.setTimeMessageGenerated(timeMessageGenerated);
@@ -76,9 +77,9 @@ public class Dump1090DataService {
                 dump1090Data.setGroundSpeed(Integer.parseInt(groundSpeed));
             dump1090Data.setTrack(track);
             if (!latitude.isEmpty())
-                dump1090Data.setLatitude(Double.parseDouble(latitude));
+                dump1090Data.setLat(Double.parseDouble(latitude));
             if (!longitude.isEmpty())
-                dump1090Data.setLongitude(Double.parseDouble(longitude));
+                dump1090Data.setLon(Double.parseDouble(longitude));
             if (!verticalRate.isEmpty())
                 dump1090Data.setVerticalRate(Integer.parseInt(verticalRate));
             dump1090Data.setSquawk(squawk);
@@ -94,7 +95,6 @@ public class Dump1090DataService {
             dump1090Data.setRawMessage(rawData);
 
             if(!squawk.equals("7777") && !longitude.isEmpty() && !latitude.isEmpty()) {
-                dump1090Data.setLocation(latitude + "/" + longitude);
                 sendData(dump1090Data);
             } else {
                 skipSending();
