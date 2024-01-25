@@ -1,5 +1,6 @@
 package adsbforwarder.adsbforwarder.receiver;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -17,7 +18,7 @@ public class Dump1090DataForwarder {
         this.dataService = dataService;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+    @PostConstruct
     public void forwardDump1090Data() {
         while (true) {
             if (dataService.queueIsNotEmpty()) {

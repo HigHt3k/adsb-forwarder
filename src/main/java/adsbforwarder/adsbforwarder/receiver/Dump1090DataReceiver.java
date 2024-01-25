@@ -1,5 +1,6 @@
 package adsbforwarder.adsbforwarder.receiver;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class Dump1090DataReceiver {
     }
 
 
-    @EventListener(ApplicationReadyEvent.class)
+    @PostConstruct
     public void retrieveDump1090Data() {
         logger.info("Trying to connect to socket.");
         try {
