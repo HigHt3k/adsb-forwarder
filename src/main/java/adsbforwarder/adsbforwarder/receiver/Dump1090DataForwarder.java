@@ -30,7 +30,9 @@ public class Dump1090DataForwarder {
         if(dataService.queueIsNotEmpty()) {
             Dump1090Data dataObject = dataService.getNextFromQueue();
 
-            Object requestData = convertToJson(dataObject);
+            String requestData = convertToJson(dataObject);
+
+            logger.info("Sending data: {}", requestData);
 
             restTemplate.postForObject(endpointUrl, requestData, String.class);
         }
