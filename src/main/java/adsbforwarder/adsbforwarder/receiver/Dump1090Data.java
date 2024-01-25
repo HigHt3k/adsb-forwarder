@@ -31,6 +31,7 @@ public class Dump1090Data {
     private boolean spiFlag;
     private boolean groundFlag;
     private String rawMessage;
+    private String location;
 
     // Constructors, getters, and setters
 

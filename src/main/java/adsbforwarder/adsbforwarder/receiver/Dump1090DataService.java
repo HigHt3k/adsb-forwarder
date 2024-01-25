@@ -94,6 +94,7 @@ public class Dump1090DataService {
             dump1090Data.setRawMessage(rawData);
 
             if(!squawk.equals("7777") && !longitude.isEmpty() && !latitude.isEmpty()) {
+                dump1090Data.setLocation(latitude + "/" + longitude);
                 sendData(dump1090Data);
             } else {
                 skipSending();
