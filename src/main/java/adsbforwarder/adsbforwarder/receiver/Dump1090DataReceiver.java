@@ -38,7 +38,6 @@ public class Dump1090DataReceiver {
             while ((line = reader.readLine()) != null) {
                 // Process the received line and extract the necessary data
                 // Parse the line and create a Dump1090Data object
-                logger.info("Received line: {}", line);
                 dataService.parseDump1090Data(line);
             }
 

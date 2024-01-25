@@ -9,26 +9,20 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class Dump1090DataService {
-    private final Dump1090DataQueue dataQueue;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+
+    private long skippedMessages = 0;
+    private long sentMessages = 0;
 
     private final Logger logger = LoggerFactory.getLogger(Dump1090DataService.class);
 
     @Autowired
-    public Dump1090DataService(Dump1090DataQueue dataQueue, RestTemplate restTemplate, ObjectMapper objectMapper) {
-        this.dataQueue = dataQueue;
+    public Dump1090DataService(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
 
-    public boolean queueIsNotEmpty() {
-        return dataQueue.hasData();
-    }
-
-    public Dump1090Data getNextFromQueue() {
-        return dataQueue.getNextData();
-    }
 
     public void parseDump1090Data(String rawData) {
         String[] dataParts = new String[0];
@@ -102,7 +96,7 @@ public class Dump1090DataService {
             if(!squawk.equals("7777") && !longitude.isEmpty() && !latitude.isEmpty()) {
                 sendData(dump1090Data);
             } else {
-                skipSending(dump1090Data);
+                skipSending();
             }
 
 
@@ -115,8 +109,8 @@ public class Dump1090DataService {
         }
     }
 
-    public void skipSending(Dump1090Data dump1090Data) {
-        logger.info("Not sending data for invalid position data: {}", convertToJson(dump1090Data));
+    public void skipSending() {
+        skippedMessages++;
     }
 
     public void sendData(Dump1090Data dump1090Data) {
@@ -125,6 +119,9 @@ public class Dump1090DataService {
         String requestData = convertToJson(dump1090Data);
 
         logger.info("SENDING DATA: {}", requestData);
+        logger.info("Total amount of sent messages: {}", sentMessages);
+        logger.info("Total amount of skipped messages: {}", skippedMessages);
+        sentMessages++;
 
         restTemplate.put(endpointUrl, requestData);
     }
