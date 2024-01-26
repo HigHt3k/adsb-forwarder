@@ -115,7 +115,7 @@ public class Dump1090DataService {
     }
 
     public void sendData(Dump1090Data dump1090Data) {
-        String endpointUrl = "http://34.30.213.233:1880/adsb";
+        String endpointUrl = "http://34.28.80.116:1880/adsb";
 
         String requestData = convertToJson(dump1090Data);
 
